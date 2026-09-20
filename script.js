@@ -1,21 +1,28 @@
-// Smooth scroll for Table of Contents links
-document.querySelectorAll('.toc a').forEach(anchor => {
+// Smooth scroll for navigation links (works with Bootstrap navbar)
+document.querySelectorAll('a.nav-link[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
     e.preventDefault();
     const targetId = this.getAttribute('href');
     const targetElement = document.querySelector(targetId);
     if (targetElement) {
-      const offset = 80; // account for sticky TOC height
+      const offset = 70; // height of sticky navbar
       const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
       window.scrollTo({
         top: elementPosition - offset,
         behavior: 'smooth'
       });
+
+      // Close mobile navbar after click
+      const navbarCollapse = document.querySelector('.navbar-collapse');
+      if (navbarCollapse.classList.contains('show')) {
+        const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse) || new bootstrap.Collapse(navbarCollapse, { toggle: false });
+        bsCollapse.hide();
+      }
     }
   });
 });
 
-// Print / Save as PDF button
+// Print / Save as PDF
 document.getElementById('printBtn').addEventListener('click', () => {
   window.print();
 });
@@ -38,28 +45,23 @@ backToTopBtn.addEventListener('click', () => {
   });
 });
 
-// Initially hide Back to Top
-backToTopBtn.style.display = 'none';
-
-// Optional: Highlight current section in TOC while scrolling
+// Highlight active section in navbar while scrolling
 const sections = document.querySelectorAll('section[id]');
-const tocLinks = document.querySelectorAll('.toc a');
+const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
 
 window.addEventListener('scroll', () => {
   let current = '';
   sections.forEach(section => {
-    const sectionTop = section.offsetTop - 120;
+    const sectionTop = section.offsetTop - 100;
     if (window.pageYOffset >= sectionTop) {
       current = section.getAttribute('id');
     }
   });
 
-  tocLinks.forEach(link => {
-    link.style.fontWeight = 'normal';
-    link.style.color = '';
+  navLinks.forEach(link => {
+    link.classList.remove('active', 'fw-bold', 'text-success');
     if (link.getAttribute('href') === '#' + current) {
-      link.style.fontWeight = '700';
-      link.style.color = '#1a3c34';
+      link.classList.add('active', 'fw-bold', 'text-success');
     }
   });
 });
