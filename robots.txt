@@ -1,0 +1,12 @@
+# robots.txt for DPR Agro-Forestry Project website
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://agri-forest-sridhar-project.vercel.app/sitemap.xml
+
+# Disallow common non-public paths (optional, add more if needed)
+Disallow: /admin/
+Disallow: /private/
+Disallow: /*.json$
